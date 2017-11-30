@@ -1,14 +1,26 @@
 package com.ideas;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Table;
+import javax.persistence.Id;
+
+@Entity
+@Table(name = "idea")
 public class Idea {
 
+    @Id
+   // @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
+    @Column(name = "text")
     private String text;
-    
+    @Column(name = "author")
     private String author;
 
-    
+
     public Idea() {
         id = 0;
     }
@@ -43,8 +55,8 @@ public class Idea {
         this.author = author;
     }
 
-   
-    
+
+
 
     @Override
     public int hashCode() {

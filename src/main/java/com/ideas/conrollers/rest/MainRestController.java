@@ -21,7 +21,9 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.ideas.Idea;
+import com.ideas.IdeaRepository;
 import com.ideas.IdeaService;
+import java.util.Arrays;
 
 /**
  *
@@ -34,179 +36,110 @@ import com.ideas.IdeaService;
 @RestController
 public class MainRestController {
 
-//    @Autowired
-//    UserService userService;  //Service which will do all data retrieval/manipulation work
-// 
-    @Autowired
-    IdeaService ideaService;  //Service which will do all data retrieval/manipulation work
 
-//    //-------------------Retrieve All Users--------------------------------------------------------
-//     
-//    @RequestMapping(value = "/user/", method = RequestMethod.GET)
-//    public ResponseEntity<List<User>> listAllUsers() {
-//        List<User> users = userService.findAllUsers();
-//        if(users.isEmpty()){
-//            return new ResponseEntity<List<User>>(HttpStatus.NO_CONTENT);//You many decide to return HttpStatus.NOT_FOUND
-//        }
-//        return new ResponseEntity<List<User>>(users, HttpStatus.OK);
-//    }
-//-------------------Retrieve All Ideas--------------------------------------------------------
+    @Autowired
+    IdeaRepository repository;  //Service which will do all data retrieval/manipulation work
+       
+        @RequestMapping(value = "/save/", method = RequestMethod.POST)
+        public String process(){
+            System.out.println("com.ideas.conrollers.rest.MainRestController.process()");
+    		// save a single Customer
+    		repository.save(new Idea(1,"text1", "auth1"));
+
+    		// save a list of Customers
+    		repository.save(Arrays.asList(
+        new Idea(2,"text2", "auth2"),
+        new Idea(3,"text3", "auth3"),
+        new Idea(4,"text4", "auth4"),
+        new Idea(5,"text5", "auth5")
+        ));
+
+    		return "Done";
+    	}
+    
     @RequestMapping(value = "/idea/", method = RequestMethod.GET)
     public ResponseEntity<List<Idea>> listAllIdeas() {
-        List<Idea> ideas = ideaService.findAllIdeas();
+        System.out.println("com.ideas.conrollers.rest.MainRestController.listAllIdeas()");
+        List<Idea> ideas = (List<Idea>) repository.findAll();
         if (ideas.isEmpty()) {
             return new ResponseEntity<List<Idea>>(HttpStatus.NO_CONTENT);//You many decide to return HttpStatus.NOT_FOUND
         }
         return new ResponseEntity<List<Idea>>(ideas, HttpStatus.OK);
     }
 
-// 
-//    //-------------------Retrieve Single User--------------------------------------------------------
-//     
-//    @RequestMapping(value = "/user/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-//    public ResponseEntity<User> getUser(@PathVariable("id") long id) {
-//        System.out.println("Fetching User with id " + id);
-//        User user = userService.findById(id);
-//        if (user == null) {
-//            System.out.println("User with id " + id + " not found");
-//            return new ResponseEntity<User>(HttpStatus.NOT_FOUND);
-//        }
-//        return new ResponseEntity<User>(user, HttpStatus.OK);
-//    }
-    @RequestMapping(value = "/idea/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Idea> getIdea(@PathVariable("id") long id) {
-        System.out.println("Fetching Idea with id " + id);
-        Idea idea = ideaService.findById(id);
-        if (idea == null) {
-            System.out.println("Idea with id " + id + " not found");
-            return new ResponseEntity<Idea>(HttpStatus.NOT_FOUND);
-        }
-        return new ResponseEntity<Idea>(idea, HttpStatus.OK);
-    }
 
-//     
-//     
-//    //-------------------Create a User--------------------------------------------------------
-//     
-//    @RequestMapping(value = "/user/", method = RequestMethod.POST)
-//    public ResponseEntity<Void> createUser(@RequestBody User user,    UriComponentsBuilder ucBuilder) {
-//        System.out.println("Creating User " + user.getName());
-// 
-//        if (userService.isUserExist(user)) {
-//            System.out.println("A User with name " + user.getName() + " already exist");
-//            return new ResponseEntity<Void>(HttpStatus.CONFLICT);
-//        }
-// 
-//        userService.saveUser(user);
-// 
-//        HttpHeaders headers = new HttpHeaders();
-//        headers.setLocation(ucBuilder.path("/user/{id}").buildAndExpand(user.getId()).toUri());
-//        return new ResponseEntity<Void>(headers, HttpStatus.CREATED);
-//    }
-    @RequestMapping(value = "/idea/", method = RequestMethod.POST)
-    public ResponseEntity<Void> createIdea(@RequestBody Idea idea, UriComponentsBuilder ucBuilder) {
-        System.out.println("Creating Idea by " + idea.getAuthor());
 
-        if (ideaService.isIdeaExist(idea)) {
-            System.out.println("A idea by  " + idea.getAuthor() + " already exist");
-            return new ResponseEntity<Void>(HttpStatus.CONFLICT);
-        }
-
-        ideaService.saveIdea(idea);
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setLocation(ucBuilder.path("/idea/{id}").buildAndExpand(idea.getId()).toUri());
-        return new ResponseEntity<Void>(headers, HttpStatus.CREATED);
-    }
-
-//     
-//    //------------------- Update a User --------------------------------------------------------
-//     
-//    @RequestMapping(value = "/user/{id}", method = RequestMethod.PUT)
-//    public ResponseEntity<User> updateUser(@PathVariable("id") long id, @RequestBody User user) {
-//        System.out.println("Updating User " + id);
-//         
-//        User currentUser = userService.findById(id);
-//         
-//        if (currentUser==null) {
-//            System.out.println("User with id " + id + " not found");
-//            return new ResponseEntity<User>(HttpStatus.NOT_FOUND);
-//        }
-// 
-//        currentUser.setName(user.getName());
-//        currentUser.setAge(user.getAge());
-//        currentUser.setSalary(user.getSalary());
-//         
-//        userService.updateUser(currentUser);
-//        return new ResponseEntity<User>(currentUser, HttpStatus.OK);
-//    }
-
-        @RequestMapping(value = "/idea/{id}", method = RequestMethod.PUT)
-    public ResponseEntity<Idea> updateIdea(@PathVariable("id") long id, @RequestBody Idea idea) {
-        System.out.println("Updating Idea " + id);
-         
-        Idea currentIdea = ideaService.findById(id);
-         
-        if (currentIdea==null) {
-            System.out.println("Idea with id " + id + " not found");
-            return new ResponseEntity<Idea>(HttpStatus.NOT_FOUND);
-        }
+     @RequestMapping(value = "/idea/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+     public ResponseEntity<Idea> getIdea(@PathVariable("id") long id) {
+         System.out.println("Fetching Idea with id " + id);
+         Idea idea = (Idea) repository.findByid(id);
+         if (idea == null) {
+             System.out.println("Idea with id " + id + " not found");
+             return new ResponseEntity<Idea>(HttpStatus.NOT_FOUND);
+         }
+         return new ResponseEntity<Idea>(idea, HttpStatus.OK);
+     }
+    
+     @RequestMapping(value = "/idea/", method = RequestMethod.POST)
+     public ResponseEntity<Void> createIdea(@RequestBody Idea idea, UriComponentsBuilder ucBuilder) {
+         System.out.println("Creating Idea by " + idea.getAuthor());
+    
         
-        currentIdea.setId(idea.getId());
-        currentIdea.setAuthor(idea.getAuthor());
-        currentIdea.setText(idea.getText());
-        
-       
+    
+         repository.save(idea);
+    
+         HttpHeaders headers = new HttpHeaders();
+         headers.setLocation(ucBuilder.path("/idea/{id}").buildAndExpand(idea.getId()).toUri());
+         return new ResponseEntity<Void>(headers, HttpStatus.CREATED);
+     }
+    //
+    //
+    //
+         @RequestMapping(value = "/idea/{id}", method = RequestMethod.PUT)
+     public ResponseEntity<Idea> updateIdea(@PathVariable("id") long id, @RequestBody Idea idea) {
+         System.out.println("Updating Idea " + id);
+    
+         Idea currentIdea = repository.findByid(id);
          
-        ideaService.updateIdea(currentIdea);
-        return new ResponseEntity<Idea>(currentIdea, HttpStatus.OK);
-    }
+    
+         if (currentIdea==null) {
+             System.out.println("Idea with id " + id + " not found");
+             return new ResponseEntity<Idea>(HttpStatus.NOT_FOUND);
+         }
+    
+         currentIdea.setId(idea.getId());
+         currentIdea.setAuthor(idea.getAuthor());
+         currentIdea.setText(idea.getText());
     
     
-//    //------------------- Delete a User --------------------------------------------------------
-//     
-//    @RequestMapping(value = "/user/{id}", method = RequestMethod.DELETE)
-//    public ResponseEntity<User> deleteUser(@PathVariable("id") long id) {
-//        System.out.println("Fetching & Deleting User with id " + id);
-// 
-//        User user = userService.findById(id);
-//        if (user == null) {
-//            System.out.println("Unable to delete. User with id " + id + " not found");
-//            return new ResponseEntity<User>(HttpStatus.NOT_FOUND);
-//        }
-// 
-//        userService.deleteUserById(id);
-//        return new ResponseEntity<User>(HttpStatus.NO_CONTENT);
-//    }
-    @RequestMapping(value = "/idea/{id}", method = RequestMethod.DELETE)
-    public ResponseEntity<Idea> deleteIdea(@PathVariable("id") long id) {
-        System.out.println("Fetching & Deleting Idea with id " + id);
-
-        Idea idea = ideaService.findById(id);
-        if (idea == null) {
-            System.out.println("Unable to delete. idea with id " + id + " not found");
-            return new ResponseEntity<Idea>(HttpStatus.NOT_FOUND);
-        }
-
-        ideaService.deleteIdeaById(id);
-        return new ResponseEntity<Idea>(HttpStatus.NO_CONTENT);
-    }
-
-//    //------------------- Delete All Users --------------------------------------------------------
-//     
-//    @RequestMapping(value = "/user/", method = RequestMethod.DELETE)
-//    public ResponseEntity<User> deleteAllUsers() {
-//        System.out.println("Deleting All Users");
-// 
-//        userService.deleteAllUsers();
-//        return new ResponseEntity<User>(HttpStatus.NO_CONTENT);
-//  }
-    @RequestMapping(value = "/idea/", method = RequestMethod.DELETE)
-    public ResponseEntity<Idea> deleteAllIdeas() {
-        System.out.println("Deleting All Ideas");
-
-        ideaService.deleteAllIdeas();
-        return new ResponseEntity<Idea>(HttpStatus.NO_CONTENT);
-    }
+         repository.save(idea);
+         
+         return new ResponseEntity<Idea>(currentIdea, HttpStatus.OK);
+     }
+    
+    
+     @RequestMapping(value = "/idea/{id}", method = RequestMethod.DELETE)
+     public ResponseEntity<Idea> deleteIdea(@PathVariable("id") long id) {
+         System.out.println("Fetching & Deleting Idea with id " + id);
+    
+         Idea idea = repository.findByid(id);
+         if (idea == null) {
+             System.out.println("Unable to delete. idea with id " + id + " not found");
+             return new ResponseEntity<Idea>(HttpStatus.NOT_FOUND);
+         }
+    
+         
+         repository.delete(id);
+         return new ResponseEntity<Idea>(HttpStatus.NO_CONTENT);
+     }
+    
+    
+     @RequestMapping(value = "/idea/", method = RequestMethod.DELETE)
+     public ResponseEntity<Idea> deleteAllIdeas() {
+         System.out.println("Deleting All Ideas");
+    
+         repository.deleteAll();
+         return new ResponseEntity<Idea>(HttpStatus.NO_CONTENT);
+     }
 
 }
