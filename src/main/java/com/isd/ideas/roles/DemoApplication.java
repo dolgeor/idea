@@ -1,14 +1,15 @@
-package com.ideas;
+package com.isd.ideas.roles;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import com.ideas.IdeaRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.CommandLineRunner;
+import org.springframework.context.annotation.ComponentScan;
+
 
 
 
 @SpringBootApplication
+    //( scanBasePackages = {"com.isd"})
+//@ComponentScan("com.isd.ideas.roles")
 public class DemoApplication  {
 
 	public static void main(String[] args) {
