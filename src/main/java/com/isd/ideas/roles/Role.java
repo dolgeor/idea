@@ -9,12 +9,13 @@ import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
 @Entity
-@Table(name = "roles",
+
+@Table(name = "role",
         uniqueConstraints = {
             @UniqueConstraint(columnNames = "id"),
             @UniqueConstraint(columnNames = "type")}
 )
-public class Roles {
+public class Role {
 
     @Id
     @GeneratedValue(strategy = IDENTITY)
@@ -24,11 +25,13 @@ public class Roles {
     @Column(name = "type", unique = true, nullable = false)
     private String type;
 
-    public Roles(long id, String type) {
+    public Role(long id, String type) {
         this.id = id;
         this.type = type;
     }
-
+    public Role() {
+       
+    }
     public long getId() {
         return id;
     }
@@ -47,6 +50,6 @@ public class Roles {
 
     @Override
     public String toString() {
-        return String.format("TYPE: %s ID: %d%n", type, id);
+        return String.format("TYPE: %s ID: %d", type, id);
     }
 }
