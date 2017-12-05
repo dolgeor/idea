@@ -16,8 +16,8 @@ public class IdeaServiceImp implements IdeaService {
     public void createIdea(Idea idea) {
 
         System.out.println("Creating Idea : " + idea);
-        if (repo.exists(idea.getId())) {
-            throw new IdeaException("Idea with id " + idea.getId() + " already exists");
+        if ((Idea) repo.findByid(idea.getId()) != null) {
+            throw new IllegalArgumentException();
         }
         repo.save(idea);
 
@@ -44,10 +44,11 @@ public class IdeaServiceImp implements IdeaService {
     @Override
     public Idea findIdeaById(long id) {
         System.out.println("Fetching Idea with id " + id);
-        if (!repo.exists(id)) {
+        Idea currentIdea = (Idea) repo.findByid(id);
+        if (currentIdea == null) {
             throw new IdeaException("There is no idea with id: " + id);
         }
-        return (Idea) repo.findByid(id);
+        return currentIdea;
     }
 
     
@@ -63,7 +64,9 @@ public class IdeaServiceImp implements IdeaService {
     @Override
     public void deleteIdea(long id) {
         System.out.println("Fetching & Deleting Idea with id " + id);
-        if (!repo.exists(id)) {
+
+        Idea idea = repo.findByid(id);
+        if (idea == null) {
             throw new IdeaException("Unable to delete. Idea with id " + id + " not found");
         }
         repo.delete(id);

@@ -1,7 +1,6 @@
 package com.isd.ideas.idea;
 
 
-
 import java.sql.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -13,7 +12,7 @@ import javax.persistence.UniqueConstraint;
 
 @Entity
 
-@Table(name = "idea_t",
+@Table(name = "idea",
         uniqueConstraints = {
             @UniqueConstraint(columnNames = "id")}
 )
@@ -36,22 +35,11 @@ public class Idea {
     public Idea() {
     }
 
-    public Idea( String text, String author, Date date) {
+    public Idea(long id, String text, String author, Date date) {
+        this.id = id;
         this.text = text;
         this.author = author;
         this.date = date;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public String getText() {
-        return text;
-    }
-
-    public void setText(String text) {
-        this.text = text;
     }
 
     public String getAuthor() {
@@ -62,6 +50,26 @@ public class Idea {
         this.author = author;
     }
 
+   
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public String getText() {
+        return text;
+    }
+
+    public void setText(String text) {
+        this.text = text;
+    }
+
+    
+
     public Date getDate() {
         return date;
     }
@@ -69,11 +77,9 @@ public class Idea {
     public void setDate(Date date) {
         this.date = date;
     }
-
+   
     @Override
     public String toString() {
-        return "Idea{" + "id=" + id + ", text=" + text + ", author=" + author + ", date=" + date + '}';
+        return String.format("IDEA: %d%n%s%nPosted: %s%nCreated by:%s",id,text,date,author);
     }
-    
-    
 }

@@ -18,14 +18,16 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 @ControllerAdvice
 public class IdeaRestResponseEntityExceptionHandler extends ResponseEntityExceptionHandler {
  
-    
     @ExceptionHandler(value = { IdeaException.class})
-    protected ResponseEntity<IdeaTypeException> handleIdeaException(IdeaException e) {
-        System.out.println(e);
-        return new ResponseEntity<>(new IdeaTypeException(e.toString()), HttpStatus.NOT_FOUND);
+    protected ResponseEntity<IdeaTypeException> handleIdeaException() {
+        return new ResponseEntity<>(new IdeaTypeException("There is no such Idea"), HttpStatus.NOT_FOUND);
     }
     
-
+    @ExceptionHandler(value = { IllegalArgumentException.class})
+    protected ResponseEntity<IdeaTypeException> createIdeaConflictException() {
+        System.out.println("Idea can't be created. Idea already exist!!!");
+        return new ResponseEntity<>(new IdeaTypeException("Idea can't be created. Idea already exist!!!"), HttpStatus.CONFLICT);
+    }
    
     private static class IdeaTypeException {
         private String message;
