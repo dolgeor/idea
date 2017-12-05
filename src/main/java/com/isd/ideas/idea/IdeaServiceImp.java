@@ -1,6 +1,8 @@
 package com.isd.ideas.idea;
 
 
+import com.isd.ideas.user_vote.UserVote;
+
 import java.sql.Date;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -88,6 +90,23 @@ public class IdeaServiceImp implements IdeaService {
             throw new IdeaException("There are no Ideas created at " + date);
         }
         return ideas; 
+    }
+//    @Autowired
+//    UserVoteRepo userVoteRepo;
+//    @Override
+//    public void addUserVote(long id) {
+//        Idea idea = repo.findByid(id);
+//        UserVote uv =  new UserVote("anon");
+//        userVoteRepo.save(uv);
+//        idea.getUserVotes().add(uv);
+//        repo.save(idea);
+//    }
+
+    @Override
+    public void addUserVote(long id, String voter) {
+        Idea idea = repo.findByid(id);
+        idea.getUserVotes().add(new UserVote(voter, idea));
+        repo.save(idea);
     }
 
 }

@@ -1,85 +1,74 @@
-package com.isd.ideas.idea;
+package com.isd.ideas.user_vote;
 
-
-import java.sql.Date;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.isd.ideas.idea.Idea;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import static javax.persistence.GenerationType.IDENTITY;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.MapsId;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
 @Entity
-
-@Table(name = "idea",
+@Table(name = "user_vote_t",
         uniqueConstraints = {
             @UniqueConstraint(columnNames = "id")}
 )
-public class Idea {
+public class UserVote {
 
     @Id
     @GeneratedValue(strategy = IDENTITY)
     @Column(name = "id", unique = true, nullable = false)
     private long id;
 
-    @Column(name = "text", nullable = false)
-    private String text;
+    @Column(name = "ip_login", nullable = false)
+    private String votingPerson;
+
     
-    @Column(name = "author", nullable = false)
-    private String author;
+    
+    
+    @OneToOne
+    @JoinColumn(name = "idea_id")
+    @JsonIgnore
+    private Idea idea;
 
-    @Column(name = "date", nullable = false)
-    private Date date;
-
-    public Idea() {
+    public Idea getIdea() {
+        return idea;
     }
 
-    public Idea(long id, String text, String author, Date date) {
-        this.id = id;
-        this.text = text;
-        this.author = author;
-        this.date = date;
+    
+    
+
+    public UserVote() {
     }
 
-    public String getAuthor() {
-        return author;
+    public UserVote(String votingPerson, Idea idea) {
+        this.votingPerson = votingPerson;
+        this.idea = idea;
     }
-
-    public void setAuthor(String author) {
-        this.author = author;
-    }
-
-   
 
     public long getId() {
         return id;
     }
 
-    public void setId(long id) {
-        this.id = id;
+    public String getVotingPerson() {
+        return votingPerson;
     }
 
-    public String getText() {
-        return text;
+    public void setVotingPerson(String votingPerson) {
+        this.votingPerson = votingPerson;
     }
 
-    public void setText(String text) {
-        this.text = text;
+    @Override
+    public String toString() {
+        return "UserVote{" + "id=" + id + ", votingPerson=" + votingPerson + ", idea_id=" + idea.getId() + '}';
     }
 
     
 
-    public Date getDate() {
-        return date;
-    }
-
-    public void setDate(Date date) {
-        this.date = date;
-    }
-   
-    @Override
-    public String toString() {
-        return String.format("IDEA: %d%n%s%nPosted: %s%nCreated by:%s",id,text,date,author);
-    }
 }

@@ -1,5 +1,8 @@
 package com.isd.ideas.idea;
 
+import com.isd.ideas.user_vote.UserVote;
+import com.isd.ideas.user_vote.UserVoteRepo;
+import com.isd.ideas.user_vote.UserVoteService;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,6 +23,26 @@ public class IdeaRestController {
     @Autowired
     IdeaService ideaService;
 
+    /////////////////////////////////////////////
+    @Autowired
+    UserVoteRepo usr;
+    @RequestMapping(value = "/{id}/user_vote", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<UserVote>> getUserVotesOfIdea(@PathVariable("id") long id) {
+        Idea idea = ideaService.findIdeaById(id);
+        
+        return ResponseEntity.ok(usr.findByidea(idea));
+    }
+    
+    @RequestMapping(value = "/{id}/user_vote",method = RequestMethod.POST)
+    public ResponseEntity<Void> addUserVoteToIdea(@PathVariable("id") long id) 
+    {
+        
+        ideaService.addUserVote(id, "dummy");
+        return ResponseEntity.ok().build();
+    }
+    
+    
+    ////////////////////////
     @RequestMapping(method = RequestMethod.GET)
     public ResponseEntity<List<Idea>> listAllIdeas() {
         return ResponseEntity.ok(ideaService.listIdeas());

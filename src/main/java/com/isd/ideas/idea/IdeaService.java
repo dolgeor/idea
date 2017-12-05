@@ -4,7 +4,7 @@ import java.sql.Date;
 import java.util.List;
 
 
-interface IdeaService {
+public interface IdeaService {
     
     public void createIdea(Idea idea);
     
@@ -19,4 +19,6 @@ interface IdeaService {
     public List<Idea> findByDate(Date date);
     
     public List<Idea> listIdeas();
+    
+    public void addUserVote(long id, String voter);
 }

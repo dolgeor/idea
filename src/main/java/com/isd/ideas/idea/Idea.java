@@ -2,12 +2,16 @@ package com.isd.ideas.idea;
 
 
 
+import com.isd.ideas.user_vote.UserVote;
 import java.sql.Date;
+import java.util.Set;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import static javax.persistence.GenerationType.IDENTITY;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
@@ -32,7 +36,23 @@ public class Idea {
 
     @Column(name = "date", nullable = false)
     private Date date;
+    
+    
+    
+    @OneToMany(mappedBy = "idea", cascade = CascadeType.ALL)
+    private Set<UserVote> userVotes;
 
+    public Set<UserVote> getUserVotes() {
+        return userVotes;
+    }
+    
+    public void setUserVotes(Set<UserVote> userVotes) {
+        this.userVotes = userVotes;
+    }
+     
+    
+    
+    
     public Idea() {
     }
 
