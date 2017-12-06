@@ -2,9 +2,9 @@ package com.isd.ideas.idea;
 
 
 
+import java.util.List;
 import com.isd.ideas.user_vote.UserVote;
 import java.sql.Date;
-import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -40,15 +40,17 @@ public class Idea {
     
     
     @OneToMany(mappedBy = "idea", cascade = CascadeType.ALL)
-    private Set<UserVote> userVotes;
+    private List<UserVote> userVotes;
 
-    public Set<UserVote> getUserVotes() {
+    public List<UserVote> getUserVotes() {
         return userVotes;
     }
-    
-    public void setUserVotes(Set<UserVote> userVotes) {
+
+    public void setUserVotes(List<UserVote> userVotes) {
         this.userVotes = userVotes;
     }
+
+  
      
     
     

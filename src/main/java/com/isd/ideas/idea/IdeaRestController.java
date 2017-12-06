@@ -23,26 +23,9 @@ public class IdeaRestController {
     @Autowired
     IdeaService ideaService;
 
-    /////////////////////////////////////////////
-    @Autowired
-    UserVoteRepo usr;
-    @RequestMapping(value = "/{id}/user_vote", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<UserVote>> getUserVotesOfIdea(@PathVariable("id") long id) {
-        Idea idea = ideaService.findIdeaById(id);
-        
-        return ResponseEntity.ok(usr.findByidea(idea));
-    }
+
     
-    @RequestMapping(value = "/{id}/user_vote",method = RequestMethod.POST)
-    public ResponseEntity<Void> addUserVoteToIdea(@PathVariable("id") long id) 
-    {
-        
-        ideaService.addUserVote(id, "dummy");
-        return ResponseEntity.ok().build();
-    }
-    
-    
-    ////////////////////////
+
     @RequestMapping(method = RequestMethod.GET)
     public ResponseEntity<List<Idea>> listAllIdeas() {
         return ResponseEntity.ok(ideaService.listIdeas());
@@ -80,5 +63,20 @@ public class IdeaRestController {
     public ResponseEntity<Idea> deleteIdea(@PathVariable("id") long id) {
         ideaService.deleteIdea(id);
         return new ResponseEntity<Idea>(HttpStatus.NO_CONTENT);
+    }
+
+
+    ///UserVoteCOntroller
+        
+    @RequestMapping(value = "/{id}/user_vote", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<UserVote>> getUserVotesOfIdea(@PathVariable("id") long id) {
+        return ResponseEntity.ok(ideaService.getUserVotesByIdeaId(id));
+    }
+    
+    @RequestMapping(value = "/{id}/user_vote",method = RequestMethod.POST)
+    public ResponseEntity<Void> addUserVoteToIdea(@PathVariable("id") long id,@RequestBody UserVote userVote) 
+    {
+        ideaService.addUserVote(id, userVote);
+        return ResponseEntity.ok().build();
     }
 }

@@ -101,12 +101,31 @@ public class IdeaServiceImp implements IdeaService {
 //        idea.getUserVotes().add(uv);
 //        repo.save(idea);
 //    }
-
+    
+    ////UserVotes
+    
     @Override
-    public void addUserVote(long id, String voter) {
-        Idea idea = repo.findByid(id);
-        idea.getUserVotes().add(new UserVote(voter, idea));
+    public void addUserVote(long id, UserVote userVote) {
+        Idea idea = findIdeaById(id);
+        System.out.println("Creating UserVote for  idea: " + idea.getId());
+        idea.getUserVotes().add(new UserVote(userVote, idea));
         repo.save(idea);
     }
+    
+    @Override
+    public List<UserVote> getUserVotesByIdeaId(long id) {
+        List<UserVote> list = findIdeaById(id).getUserVotes();
+        if (list.isEmpty()) {
+            throw new IdeaException("There are no UserVotes for idea " + id);
+        }
+        return list;
+    }
 
+    @Override
+    public UserVote getUserVoteById(long id, long user_vote_id) {
+        List<UserVote> list = getUserVotesByIdeaId(id);
+        return null;
+    }
+    
+    
 }

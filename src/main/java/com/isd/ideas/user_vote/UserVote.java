@@ -7,10 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import static javax.persistence.GenerationType.IDENTITY;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.MapsId;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
@@ -32,8 +29,8 @@ public class UserVote {
     
     
     
-    @OneToOne
-    @JoinColumn(name = "idea_id")
+    @ManyToOne
+  //  @JoinColumn(name = "idea_id")
     @JsonIgnore
     private Idea idea;
 
@@ -46,11 +43,14 @@ public class UserVote {
 
     public UserVote() {
     }
-
-    public UserVote(String votingPerson, Idea idea) {
-        this.votingPerson = votingPerson;
+    
+    public UserVote(UserVote userVote, Idea idea) {
+        this.votingPerson = userVote.votingPerson;
         this.idea = idea;
     }
+    
+    
+    
 
     public long getId() {
         return id;
