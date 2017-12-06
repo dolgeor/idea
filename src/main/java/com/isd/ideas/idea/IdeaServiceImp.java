@@ -2,6 +2,7 @@ package com.isd.ideas.idea;
 
 
 import com.isd.ideas.user_vote.UserVote;
+import com.isd.ideas.user_vote.UserVoteRepo;
 
 import java.sql.Date;
 import java.util.List;
@@ -13,6 +14,9 @@ public class IdeaServiceImp implements IdeaService {
 
     @Autowired
     IdeaRepo repo;
+    
+    @Autowired
+    UserVoteRepo repoUserVote;
 
     @Override
     public void createIdea(Idea idea) {
@@ -91,23 +95,16 @@ public class IdeaServiceImp implements IdeaService {
         }
         return ideas; 
     }
-//    @Autowired
-//    UserVoteRepo userVoteRepo;
-//    @Override
-//    public void addUserVote(long id) {
-//        Idea idea = repo.findByid(id);
-//        UserVote uv =  new UserVote("anon");
-//        userVoteRepo.save(uv);
-//        idea.getUserVotes().add(uv);
-//        repo.save(idea);
-//    }
-    
+
     ////UserVotes
-    
+
     @Override
     public void addUserVote(long id, UserVote userVote) {
         Idea idea = findIdeaById(id);
         System.out.println("Creating UserVote for  idea: " + idea.getId());
+        if (repoUserVote.exists(userVote.getId())) {
+            throw new IdeaException("UserVote with id " + userVote.getId() + " already exists");
+        }
         idea.getUserVotes().add(new UserVote(userVote, idea));
         repo.save(idea);
     }
@@ -121,11 +118,7 @@ public class IdeaServiceImp implements IdeaService {
         return list;
     }
 
-    @Override
-    public UserVote getUserVoteById(long id, long user_vote_id) {
-        List<UserVote> list = getUserVotesByIdeaId(id);
-        return null;
-    }
+    
     
     
 }

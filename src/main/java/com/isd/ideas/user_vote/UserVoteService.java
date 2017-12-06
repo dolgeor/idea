@@ -1,15 +1,13 @@
 package com.isd.ideas.user_vote;
 
-import java.util.List;
+import com.isd.ideas.idea.Idea;
 
 
 public interface UserVoteService {
-    
-    public void createUserVote(UserVote userVote);
 
     public void deleteUserVote(long id);
     
-    public UserVote findUserVoteById(long id);
+    public UserVote findUserVoteByVotingPersonAndIdea(String votingPreson,Idea idea);
+
     
-    public List<UserVote> listUserVotes();
 }

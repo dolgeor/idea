@@ -1,7 +1,6 @@
 package com.isd.ideas.idea;
 
 import com.isd.ideas.user_vote.UserVote;
-import com.isd.ideas.user_vote.UserVoteRepo;
 import com.isd.ideas.user_vote.UserVoteService;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
@@ -23,8 +22,8 @@ public class IdeaRestController {
     @Autowired
     IdeaService ideaService;
 
-
-    
+    @Autowired
+    UserVoteService userVoteService;
 
     @RequestMapping(method = RequestMethod.GET)
     public ResponseEntity<List<Idea>> listAllIdeas() {
@@ -65,17 +64,21 @@ public class IdeaRestController {
         return new ResponseEntity<Idea>(HttpStatus.NO_CONTENT);
     }
 
-
     ///UserVoteCOntroller
-        
     @RequestMapping(value = "/{id}/user_vote", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<UserVote>> getUserVotesOfIdea(@PathVariable("id") long id) {
         return ResponseEntity.ok(ideaService.getUserVotesByIdeaId(id));
     }
+
+    @RequestMapping(value = "/{id}/user_vote", params = "voted_by", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<UserVote> findByvotingPerson(@PathVariable("id") long id, @RequestParam("voted_by") String author) {
+        Idea idea = ideaService.findIdeaById(id);
+        userVoteService.deleteUserVote(userVoteService.findUserVoteByVotingPersonAndIdea(author, idea).getId());
+        return new ResponseEntity<UserVote>(HttpStatus.NO_CONTENT);
+    }
     
-    @RequestMapping(value = "/{id}/user_vote",method = RequestMethod.POST)
-    public ResponseEntity<Void> addUserVoteToIdea(@PathVariable("id") long id,@RequestBody UserVote userVote) 
-    {
+    @RequestMapping(value = "/{id}/user_vote", method = RequestMethod.POST)
+    public ResponseEntity<Void> addUserVoteToIdea(@PathVariable("id") long id, @RequestBody UserVote userVote) {
         ideaService.addUserVote(id, userVote);
         return ResponseEntity.ok().build();
     }

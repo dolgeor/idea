@@ -21,9 +21,9 @@ public interface IdeaService {
     
     public List<Idea> listIdeas();
     
-    public List<UserVote> getUserVotesByIdeaId(long id);
+    //UserService
     
-    public UserVote getUserVoteById(long id, long user_vote_id);
+    public List<UserVote> getUserVotesByIdeaId(long id);
     
     public void addUserVote(long id, UserVote userVote);
 }
