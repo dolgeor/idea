@@ -42,7 +42,7 @@ public class UserRestController {
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-    public ResponseEntity<User> deleteRole(@PathVariable("id") long id) {
+    public ResponseEntity<User> deleteUser(@PathVariable("id") long id) {
         userService.deleteUser(id);
        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

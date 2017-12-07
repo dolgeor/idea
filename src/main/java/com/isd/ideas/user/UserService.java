@@ -3,7 +3,7 @@ package com.isd.ideas.user;
 import java.util.List;
 
 
-interface UserService {
+public interface UserService {
     
     public void createUser(User user);
     

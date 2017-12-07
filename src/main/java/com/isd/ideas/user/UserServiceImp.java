@@ -31,7 +31,6 @@ public class UserServiceImp implements UserService {
         }
         currentUser.setLogin(user.getLogin());
         currentUser.setPassword(user.getPassword());
-        currentUser.setRole_id(user.getRole_id());
         currentUser.setEnabled(user.getEnabled());
         repo.save(currentUser);
 
