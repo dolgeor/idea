@@ -1,6 +1,7 @@
 package com.isd.ideas.idea;
 
 import com.isd.ideas.user_vote.UserVote;
+import com.isd.ideas.vote.Vote;
 import java.sql.Date;
 import java.util.List;
 
@@ -26,4 +27,8 @@ public interface IdeaService {
     public List<UserVote> getUserVotesByIdeaId(long id);
     
     public void addUserVote(long id, UserVote userVote);
+    
+    //Votes
+    
+    
 }

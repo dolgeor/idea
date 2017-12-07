@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.isd.ideas.vote;
 
 import org.springframework.http.HttpStatus;
@@ -18,20 +13,26 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 @ControllerAdvice
 public class VoteRestResponseEntityExceptionHandler extends ResponseEntityExceptionHandler {
  
-    @ExceptionHandler(value = {VoteException.class})
-    protected ResponseEntity<VoteTypeException> handleVoteException(VoteException e) {
-        return new ResponseEntity<>(new VoteTypeException(e.toString()), HttpStatus.NOT_FOUND);
+    
+    @ExceptionHandler(value = { VoteException.class})
+    protected ResponseEntity<UserVoteTypeException> handleUserVoteException(VoteException e) {
+        System.out.println(e);
+        return new ResponseEntity<>(new UserVoteTypeException(e.toString()), HttpStatus.NOT_FOUND);
     }
     
-    private static class VoteTypeException {
+
+   
+    private static class UserVoteTypeException {
         private String message;
 
-        public VoteTypeException(String message) {
+        public UserVoteTypeException(String message) {
             this.message = message;
         }
 
-        public VoteTypeException() {
+        public UserVoteTypeException() {
         }
+
+        
 
         public String getMessage() {
             return message;

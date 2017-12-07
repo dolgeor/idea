@@ -1,7 +1,5 @@
 package com.isd.ideas.idea;
 
-
-
 import java.util.List;
 import com.isd.ideas.user_vote.UserVote;
 import java.sql.Date;
@@ -30,15 +28,13 @@ public class Idea {
 
     @Column(name = "text", nullable = false)
     private String text;
-    
+
     @Column(name = "author", nullable = false)
     private String author;
 
-    @Column(name = "date", nullable = false)
+    @Column(name = "idea_date", nullable = false)
     private Date date;
-    
-    
-    
+
     @OneToMany(mappedBy = "idea", cascade = CascadeType.ALL)
     private List<UserVote> userVotes;
 
@@ -50,15 +46,10 @@ public class Idea {
         this.userVotes = userVotes;
     }
 
-  
-     
-    
-    
-    
     public Idea() {
     }
 
-    public Idea( String text, String author, Date date) {
+    public Idea(String text, String author, Date date) {
         this.text = text;
         this.author = author;
         this.date = date;
@@ -96,6 +87,9 @@ public class Idea {
     public String toString() {
         return "Idea{" + "id=" + id + ", text=" + text + ", author=" + author + ", date=" + date + '}';
     }
-    
-    
+
+    void vote(UserVote userVote) {
+        this.userVotes.add(userVote);
+    }
+
 }

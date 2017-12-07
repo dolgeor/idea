@@ -1,48 +1,58 @@
 package com.isd.ideas.vote;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.isd.ideas.user_vote.UserVote;
 import java.sql.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import static javax.persistence.GenerationType.IDENTITY;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-    
+import javax.persistence.UniqueConstraint;
+
+
 @Entity
-@Table(name = "vote_t")
+@Table(name = "vote_t",
+        uniqueConstraints = {
+            @UniqueConstraint(columnNames = "id")})
 public class Vote {
-    
-    @Column(name = "vote_id", nullable = false)
+
     @Id
+    @GeneratedValue(strategy = IDENTITY)
+    @Column(name = "id", unique = true, nullable = false)
     private long id;
 
-    @Column(name = "date", nullable = false)
-    private Date date;
-    
-    @Column(name = "like_dislike", nullable = false)
+    @Column(name = "vote_date", nullable = false)
+    private Date voteDate;
+
+    @Column(name = "like_dislike")
     private Boolean like_dislike;
+
+    @ManyToOne
+    @JsonIgnore
+    UserVote userVote;
 
     public Vote() {
     }
 
-    public Vote(long id, Date date, Boolean like_dislike) {
-        this.id = id;
-        this.date = date;
-        this.like_dislike = like_dislike;
+    public Vote(Vote vote, UserVote userVote) {
+        this.voteDate = vote.voteDate;
+        this.like_dislike = vote.like_dislike;
+        this.userVote = userVote;
     }
 
     public long getId() {
         return id;
     }
 
-    public void setId(long id) {
-        this.id = id;
+    public Date getVoteDate() {
+        return voteDate;
     }
 
-    public Date getDate() {
-        return date;
-    }
-
-    public void setDate(Date date) {
-        this.date = date;
+    public void setVoteDate(Date voteDate) {
+        this.voteDate = voteDate;
     }
 
     public Boolean getLike_dislike() {
@@ -53,9 +63,17 @@ public class Vote {
         this.like_dislike = like_dislike;
     }
 
+    public UserVote getUserVote() {
+        return userVote;
+    }
+
+ 
+
+    
+
     @Override
     public String toString() {
-        return "Vote{" + "id=" + id + ", date=" + date + ", like_dislike=" + like_dislike + '}';
+        return "Vote{" + "date=" + voteDate + ", like_dislike=" + like_dislike + ", vote_id=" + userVote.getId() + '}';
     }
-    
+
 }

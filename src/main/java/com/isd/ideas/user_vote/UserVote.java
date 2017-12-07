@@ -2,12 +2,16 @@ package com.isd.ideas.user_vote;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.isd.ideas.idea.Idea;
+import com.isd.ideas.vote.Vote;
+import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import static javax.persistence.GenerationType.IDENTITY;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
@@ -23,7 +27,7 @@ public class UserVote {
     @Column(name = "id", unique = true, nullable = false)
     private long id;
 
-    @Column(name = "ip_login", nullable = false)
+    @Column(name = "voter", nullable = false)
     private String votingPerson;
 
     
@@ -37,7 +41,19 @@ public class UserVote {
     public Idea getIdea() {
         return idea;
     }
+    
+    @OneToMany(mappedBy = "userVote", cascade = CascadeType.ALL)
+    private List<Vote> votes;
 
+    public List<Vote> getVotes() {
+        return votes;
+    }
+
+    public void setVotes(List<Vote> votes) {
+        this.votes = votes;
+    }
+
+    
     
     
 
@@ -68,6 +84,8 @@ public class UserVote {
     public String toString() {
         return "UserVote{" + "id=" + id + ", votingPerson=" + votingPerson + ", idea_id=" + idea.getId() + '}';
     }
+
+
 
     
 

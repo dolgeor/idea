@@ -1,5 +1,6 @@
 package com.isd.ideas.vote;
 
+import com.isd.ideas.idea.IdeaException;
 import java.sql.Date;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,44 +13,16 @@ public class VoteServiceImp implements VoteService {
     VoteRepo repo;
 
     @Override
-    public void createVote(Vote vote) {
-        repo.save(vote);
+    public List<Vote> findVoteByVoteDate(Date date) {
+    System.out.println("Fetching Votes from " + date);
+    List<Vote> votes = (List<Vote>) repo.findByVoteDate(date);
+        if (votes.isEmpty()) {
+            throw new IdeaException("Nobody voted at " + date);
+        }
+        return votes;
     }
 
-    @Override
-    public Vote findVoteById(long id) {
-        System.out.println("Fetching vote with id " + id);
-        if (repo.findByid(id) == null) {
-            throw new VoteException("There is no vote with id: " + id);
-        }
-        return repo.findByid(id);
-    }
-    
-    @Override
-    public Vote findVoteByDate(Date date) {
-        System.out.println("Fetching vote with id " + date);
-        if (repo.findBydate(date) == null) {
-            throw new VoteException("There is no vote with id: " + date);
-        }
-        return repo.findBydate(date);
-    }
 
-    @Override
-    public List<Vote> listVote() {
-        List<Vote> list = (List<Vote>) repo.findAll();
-        if (list.isEmpty()) {
-            throw new VoteException("There are no votes");
-        }
-        return list;
-    }
 
-    @Override
-    public void deleteVote(long id) {
-        System.out.println("Fetching & Deleting User with id " + id);
-        if (repo.findByid(id) == null) {
-            throw new VoteException("Unable to delete. Vote with id " + id + " not found");
-        }
-        repo.delete(id);
-    }
-
+   
 }

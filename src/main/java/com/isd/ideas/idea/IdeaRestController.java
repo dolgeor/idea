@@ -2,6 +2,7 @@ package com.isd.ideas.idea;
 
 import com.isd.ideas.user_vote.UserVote;
 import com.isd.ideas.user_vote.UserVoteService;
+import com.isd.ideas.vote.VoteService;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @RestController
-@RequestMapping(value = "/idea")
+@RequestMapping(value = "/ideas")
 public class IdeaRestController {
 
     @Autowired
@@ -24,6 +25,9 @@ public class IdeaRestController {
 
     @Autowired
     UserVoteService userVoteService;
+    
+    @Autowired
+    VoteService voteService;
 
     @RequestMapping(method = RequestMethod.GET)
     public ResponseEntity<List<Idea>> listAllIdeas() {
@@ -65,21 +69,35 @@ public class IdeaRestController {
     }
 
     ///UserVoteCOntroller
-    @RequestMapping(value = "/{id}/user_vote", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/{id}/user_votes", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<UserVote>> getUserVotesOfIdea(@PathVariable("id") long id) {
         return ResponseEntity.ok(ideaService.getUserVotesByIdeaId(id));
     }
 
-    @RequestMapping(value = "/{id}/user_vote", params = "voted_by", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<UserVote> findByvotingPerson(@PathVariable("id") long id, @RequestParam("voted_by") String author) {
+    @RequestMapping(value = "/{id}/user_votes", params = "voted_by", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<UserVote> getUserVoteByIdeaAndByvotingPerson(@PathVariable("id") long id, @RequestParam("voted_by") String author) {
+        Idea idea = ideaService.findIdeaById(id);
+        return ResponseEntity.ok(userVoteService.findUserVoteByVotingPersonAndIdea(author, idea));
+    }
+    
+    
+    @RequestMapping(value = "/{id}/user_votes", params = "voted_by", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<UserVote> deleteByvotingPerson(@PathVariable("id") long id, @RequestParam("voted_by") String author) {
         Idea idea = ideaService.findIdeaById(id);
         userVoteService.deleteUserVote(userVoteService.findUserVoteByVotingPersonAndIdea(author, idea).getId());
         return new ResponseEntity<UserVote>(HttpStatus.NO_CONTENT);
     }
     
-    @RequestMapping(value = "/{id}/user_vote", method = RequestMethod.POST)
+    @RequestMapping(value = "/{id}/user_votes", method = RequestMethod.POST)
     public ResponseEntity<Void> addUserVoteToIdea(@PathVariable("id") long id, @RequestBody UserVote userVote) {
         ideaService.addUserVote(id, userVote);
         return ResponseEntity.ok().build();
     }
+    
+        ///VoteCOntroller
+//    @RequestMapping(value = "/{id}/user_vote", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+//    public ResponseEntity<List<UserVote>> getUserVotesOfIdea(@PathVariable("id") long id) {
+//        return ResponseEntity.ok(ideaService.getUserVotesByIdeaId(id));
+//    }
+    
 }
